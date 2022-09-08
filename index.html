@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Music player</title>
+<link rel="stylesheet" href="./fontawesome-free-6.1.1-web/fontawesome-free-6.1.1-web/css/all.min.css">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  
+  <style>
+    :root {
+  --primary-color: #ec1f55;
+  --text-color: #333;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: inherit;
+}
+
+body {
+  background-color: #f5f5f5;
+}
+
+html {
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+.player {
+  position: relative;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.player .icon-pause {
+  display: none;
+}
+
+.player.playing .icon-pause {
+  display: inline-block;
+}
+
+.player.playing .icon-play {
+  display: none;
+}
+
+.dashboard {
+  background-repeat: no-repeat ;
+  background-size: cover;
+  background-position: center;
+  padding-top:100%;
+  width:100%;
+  padding: 16px 16px 14px;
+  background-color: #fff;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  max-width: 480px;
+  border-bottom:1px solid #ebebeb;}
+  
+
+/* HEADER */
+header {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+header h4 {
+  color: var(--primary-color);
+  font-size: 12px;
+}
+
+header h2 {
+  color: var(--text-color);
+  font-size: 20px;
+}
+
+/* CD */
+.cd {
+  display: flex;
+  margin: auto;
+  width: 200px;
+}
+
+.cd-thumb {
+  width: 100%;
+  padding-top: 100%;
+  border-radius: 50%;
+  background-color: #333;
+  background-repeat: no-repeat ;
+  background-size: cover;
+  background-position: center;
+  margin: auto;
+}
+
+/* CONTROL */
+.control {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 18px 0 8px 0;
+}
+
+.control .btn {
+  color: #666;
+  padding: 18px;
+  font-size: 18px;
+}
+
+.control .btn.active {
+  color: var(--primary-color);
+}
+
+.control .btn-toggle-play {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  font-size: 24px;
+  color: #fff;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--primary-color);}
+  
+.progress {
+  width: 100%;
+  -webkit-appearance: none;
+  height: 6px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2s;
+}
+
+.progress::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 6px;
+  background-color: var(--primary-color);
+  cursor: pointer;
+}
+
+/* PLAYLIST */
+.playlist {
+  margin-top: 408px;
+  padding: 12px;
+}
+
+.song {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  background-color: #fff;
+  padding: 8px 16px;
+  border-radius: 5px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+.song.active {
+  background-color: var(--primary-color);}
+  
+  
+  .song.active .option,
+.song.active .author,
+.song.active .title {
+  color: #fff;
+}
+
+.song .thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-size: cover;
+  margin: 0 8px;
+}
+
+.song .body {
+  flex:1;
+  padding:0 16px;}
+  
+  .song .title {
+  font-size: 18px;
+  text-transform: uppercase;
+  color: var(--text-color);
+}
+
+.song .author {
+  font-size: 12px;
+  color: #999;
+}
+
+.song .option {
+  padding: 16px 8px;
+  color: #999;
+  font-size: 18px;
+}
+
+  </style>
+  
+<div class="player">
+  <!-- Dashboard -->
+  <div class="dashboard" style="background-image:url(./img/flower.png);">
+    <!-- Header -->
+    <header>
+      <h4>Now playing:</h4>
+      <h2>String 57th & 9th</h2>
+    </header>
+
+    <!-- CD -->
+    <div class="cd">
+      <div class="cd-thumb" style="background-image: url('https://i.ytimg.com/vi/jTLhQf5KJSc/maxresdefault.jpg')">
+      </div>
+    </div>
+
+    <!-- Control -->
+    <div class="control">
+      <div class="btn btn-repeat">
+        <i class="fas fa-redo"></i>
+      </div>
+      <div class="btn btn-prev">
+        <i class="fas fa-step-backward"></i>
+      </div>
+      <div class="btn btn-toggle-play">
+        <i class="fas fa-pause icon-pause"></i>
+        <i class="fas fa-play icon-play"></i>
+      </div>
+      <div class="btn btn-next">
+        <i class="fas fa-step-forward"></i>
+      </div>
+      <div class="btn btn-random">
+        <i class="fas fa-random"></i>
+      </div>
+    </div>
+
+    <input id="progress" class="progress" type="range" value="0" step="1" min="0" max="100">
+
+    <audio id="audio" src=""></audio>
+  </div>
+  
+  <!-- Playlist -->
+  <div class="playlist">
+    
+  </div>
+</div>
+
+<!-- Design from: https://static.collectui.com/shots/3671744/musicloud-revolutionary-app-for-music-streaming-large -->
+
+<script>
+
+/**
+ * 1. render song 
+ * 2. scroll top
+ * 3. play / pause / seek
+ * 4. cd totate
+ * 5. next / prev
+ * 6. random
+ * 7. next / repeat khi ended
+ * 8. active song 
+ * 9. scroll active song on to view 
+ * 10. play song khi click */
+ 
+  const $ = document.querySelector.bind(document)
+  const $$ = document.querySelectorAll.bind(document)
+  
+  const PLAYER_STORAGE_KEY = 'F8-PLAYER'
+  
+  const playlist = $('.playlist')
+  const cd = $('.cd')
+  const cdWidth = cd.offsetWidth
+  const heading = $('header h2')
+  const audio = $('#audio')
+  const cdThumb = $('.cd-thumb')
+  const player = $('.player')
+  const btnPlay = $('.btn-toggle-play')
+  const song = $('.song')
+  const progress = $('#progress')
+  const next = $('.btn-next')
+  const prev = $('.btn-prev')
+  const random = $('.btn-random')
+  const repeat = $('.btn-repeat')
+  
+  const app = {
+    currentIndex: 0,
+    isPlaying: false,
+    isRandoming: false,
+    isRepeating: false,
+    /*config: JSON.parse(localStorage.getItem(PLAYER_STORAGE_KEY)) || {},
+    setConfig: function(key, value) {
+      this.config[key] = value
+      localStorage.setItem(PLAYER_STORAGE_KEY, JSON.stringify(this.config))
+    },*/
+    songs: [
+      {
+        id:0,
+        name: 'READY FOR LOVE',
+        singer: 'Blackpink',
+        path: './music/song1.mp3',
+        image: './img/song1.jpg'
+      },
+      {
+        id:1,
+        name: 'AS IF IT\'S YOUR LAST',
+        singer: 'Blackpink',
+        path: './music/song2.mp3',
+        image: './img/song2.jpg'
+      },
+      {
+        id:2,
+        name: 'PLAYING WITH FIRE',
+        singer: 'Blackpink',
+        path: './music/song3.mp3',
+        image: './img/song3.jpg'
+      },
+      {
+        id:3,
+        name: 'HOW YOU LIKE THAT',
+        singer: 'Blackpink',
+        path: './music/song4.mp3',
+        image: './img/song4.jpg'
+      },
+      {
+        id:4,
+        name: 'DDU-DU DDU-DU',
+        singer: 'Blackpink',
+        path: './music/song5.mp3',
+        image: './img/song5.jpg'
+      },
+      {
+        id:5,
+        name: 'SOLO',
+        singer: 'Jennie',
+        path: './music/song6.mp3',
+        image: './img/song6.jpg'
+      },
+      {
+        id:6,
+        name: 'Kill This Love',
+        singer: 'Blackpink',
+        path: './music/song7.mp3',
+        image: './img/song7.jpeg'
+      },
+      {
+        id:7,
+        name: 'STAY',
+        singer: 'Blackpink',
+        path: './music/song8.mp3',
+        image: './img/song8.jpg'
+      },
+      {
+        id:8,
+        name: 'LOVESICK GIRL',
+        singer: 'Blackpink',
+        path: './music/song9.mp3',
+        image: './img/song9.jpeg'
+      },
+      {
+        id:9,
+        name: 'GONE',
+        singer: 'Rosé',
+        path: './music/song10.mp3',
+        image: './img/song10.jpg'
+      },
+      {
+        id:10,
+        name: 'lalisa',
+        singer: 'Lisa',
+        path: './music/song11.mp3',
+        image: './img/song11.jpg'
+      },
+    ],
+    render: function() {
+      var htmls = this.songs.map((song, index) => {
+        return `<div class="song ${index === this.currentIndex ? 'active' : ''}" data-index="${index}">
+      <div class="thumb" style="background-image: url('${song.image}')">
+      </div>
+      <div class="body">
+        <h3 class="title">${song.name}</h3>
+        <p class="author">${song.singer}</p>
+      </div>
+      <div class="option">
+        <i class="fas fa-ellipsis-h"></i>
+      </div>
+    </div>`
+      })
+      playlist.innerHTML = htmls.join('')
+    },
+    handleEvent: function() {
+      //xử lí phóng to / thu nhỏ
+      document.onscroll = function() {
+        
+      const scrollTop = window.scrollY || document.documentElement.scrollTop
+      const newCdWidth = cdWidth - scrollTop
+      
+       cd.style.width = newCdWidth > 0 ? newCdWidth + 'px' : 0
+       cd.style.opacity = newCdWidth / cdWidth
+      }
+      
+      //xử lí cd quay
+      const cdThumbAnimation = cdThumb.animate([{transform: 'rotate(360deg)'}], {
+        duration: 10000,
+        iterations: Infinity
+      })
+      cdThumbAnimation.pause()
+      
+      //xử lí play / pause
+      btnPlay.onclick = function() {
+        app.isPlaying = !app.isPlaying
+        player.classList.toggle('playing', app.isPlaying)
+        
+        if (app.isPlaying) {
+          audio.play()
+        } else {
+          audio.pause()
+        }
+        
+        //khi dc play
+        audio.onplay = function() {
+          cdThumbAnimation.play()
+        }
+        
+        //khi dc pause
+        audio.onpause = function() {
+          cdThumbAnimation.pause()
+        }
+      }
+      
+      //thể hiện nhạc đang phát đến đâu
+        audio.ontimeupdate = function() {
+          if (audio.duration) {
+            const progressPercent = Math.floor((audio.currentTime / audio.duration) * 100)
+            progress.value = progressPercent
+          }
+        } 
+      
+      //tua
+      progress.onchange = function(e) {
+        const seekTime = e.target.value*audio.duration / 100
+        audio.currentTime = seekTime
+      }
+      
+      //khi next
+      next.onclick = function() {
+        if (app.isRandoming) {
+          app.randomSong()
+        } else {
+          app.nextSong()
+        }
+        app.isPlaying = true
+        player.classList.add('playing')
+        cdThumbAnimation.play()
+        audio.play()
+        app.render()
+        app.scrollToActiveSong()
+      }
+      
+      //khi prev
+      prev.onclick = function() {
+        if (app.isRandoming) {
+          app.randomSong()
+        } else {
+          app.prevSong()
+        }
+        app.isPlaying = true
+        player.classList.add('playing')
+        cdThumbAnimation.play()
+        audio.play()
+        app.render()
+        app.scrollToActiveSong()
+      }
+      
+      //phát ngẫu nhiên
+      random.onclick = function() {
+        app.isRandoming = !app.isRandoming
+        random.classList.toggle('active', app.isRandoming)
+        /*app.setConfig('isRandoming', app.isRandoming)*/
+      }
+      
+      //next khi end
+      audio.onended = function() {
+        if (app.isRepeating) {
+          audio.play()
+        } else if (app.isRandoming) {
+          app.randomSong()
+        } else {
+          next.click()
+        }
+        audio.play()
+        app.render()
+      }
+      
+      //lặp lại khi kết thúc
+      repeat.onclick = function() {
+        app.isRepeating = !app.isRepeating
+        repeat.classList.toggle('active', app.isRepeating)
+        /*app.setConfig('isRepeating', app.isRepeating)*/
+      }
+      
+      //xử lí click vào playlist
+      playlist.onclick = function(e) {
+        const songNode = e.target.closest('.song:not(.active)')
+        const optionNode = e.target.closest('.option')
+        
+        if (songNode || optionNode) {
+          
+          if (songNode) {
+           app.currentIndex = Number(songNode.getAttribute('data-index'))
+           app.isPlaying = true
+           player.classList.add('playing')
+           cdThumbAnimation.play()
+           app.loadCurrentSong()
+           app.render()
+           audio.play()
+          }
+          
+        }
+      }
+      
+    },
+    loadCurrentSong: function() {
+      heading.innerText = this.currentSong.name
+      audio.src = this.currentSong.path
+      cdThumb.style.backgroundImage = `url('${this.currentSong.image}')`
+    },
+    defineProperties: function() {
+      Object.defineProperty(this, 'currentSong', {
+       get: function() {
+         return this.songs[this.currentIndex]
+       }
+      })
+    },
+    /*loadConfig: function() {
+      this.isRandoming = this.config
+      this.isRepeating = this.config
+    },*/
+    nextSong: function() {
+      this.currentIndex++
+      if (this.currentIndex >= this.songs.length) {
+        this.currentIndex = 0
+      }
+      this.loadCurrentSong()
+    },
+    prevSong: function() {
+      this.currentIndex--
+      if (this.currentIndex < 0) {
+        this.currentIndex = this.songs.length -1
+      }
+      this.loadCurrentSong()
+    },
+    randomSong: function() {
+      let newIndex 
+      do {
+        newIndex = Math.floor(Math.random() * this.songs.length)
+      } while (newIndex === this.currentIndex)
+      this.currentIndex = newIndex
+      this.loadCurrentSong()
+    },
+    nextEnd: function() {
+      this.currentIndex++
+      this.loadCurrentSong()
+    },
+    scrollToActiveSong: function() {
+      setTimeout(function() {
+        $('.song.active').scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        })
+      }, 100)
+    },
+    start: function() {
+      /*//gán cấu hình từ config vào ứng dụng
+      this.loadConfig()*/
+      
+      //xử lí sự kiện lắng nghe
+      this.handleEvent()
+      
+      //định nghĩa thuộc tính
+      this.defineProperties()
+      
+      this.loadCurrentSong()
+      
+      this.render()
+      
+      this.currentIndex
+      
+      //hiển thị trạng thái của btn repeat & random
+      /*random.classList.toggle('active', app.isRandoming)
+      repeat.classList.toggle('active', app.isRepeating)"*/
+    }
+  }
+  app.start()
+</script>
+
+</body>
+</html>
