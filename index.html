@@ -399,6 +399,13 @@ header h2 {
         path: './music/song12.mp3',
         image: './img/song12.jpg'
       },
+      {
+        id:12,
+        name: 'PINK VENOM',
+        singer: 'Blackpink',
+        path: './music/song13.mp3',
+        image: './img/song13.jpg'
+      },
     ],
     render: function() {
       var htmls = this.songs.map((song, index) => {
@@ -597,6 +604,21 @@ header h2 {
           block: 'center'
         })
       }, 100)
+    },
+    saveProCurToSto() {
+      // lưu các nút hay bài hát hiện tại
+      var songsKey = Object.keys(app)
+      var songs = songsKey[4]
+
+      // localStorage.setItem(songs, JSON.stringify())
+      // console.log(song.closest('.active').dataset.index)
+      // var curr = song.closest(".active")
+      // console.log(curr)
+
+      console.log(songs)
+    },
+    showProCur() {
+      JSON.parse(localStorage.getItem(songs))
     },
     start: function() {
       /*//gán cấu hình từ config vào ứng dụng
